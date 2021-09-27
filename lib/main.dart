@@ -11,6 +11,7 @@ import 'package:sendbird_flutter/screens/login/login_screen.dart';
 import 'package:sendbird_flutter/styles/color.dart';
 import 'package:sendbird_flutter/utils/notification_service.dart';
 import 'package:sendbird_sdk/sendbird_sdk.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -55,17 +56,18 @@ class MyAppState extends State<MyApp> {
         //launch
         print('onLaunch: $data');
         final rawData = data.data;
+        Fluttertoast.showToast(msg: rawData['sendbird']['channel']['channel_url'], toastLength: Toast.LENGTH_LONG);
         appState.setDestination(rawData['sendbird']['channel']['channel_url']);
+      },
+      onMessage: (data) async {
+        //terminated? background
+        print('onMessage: $data');
       },
       onResume: (data) async {
         //called when user tap on push notification
         print('onResume');
         final rawData = data.data;
         appState.setDestination(rawData['sendbird']['channel']['channel_url']);
-      },
-      onMessage: (data) async {
-        //terminated? background
-        print('onMessage: $data');
       },
       onBackgroundMessage: handleBackgroundMessage,
     );
